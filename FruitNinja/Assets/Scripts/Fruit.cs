@@ -16,6 +16,9 @@ public class Fruit : MonoBehaviour
             r.transform.rotation = Random.rotation;
             r.AddExplosionForce(Random.Range(500,1000),transform.position,5);
         }
+
+        FindObjectOfType<GameManager>().IncreaseScore(3);
+
         Destroy(inst.gameObject, 5);
         Destroy(gameObject);
     }
