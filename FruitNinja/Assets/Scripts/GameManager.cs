@@ -7,26 +7,43 @@ public class GameManager : MonoBehaviour
 {
     [Header("Score Elements")]
     public int score;
+    public int highscore;
     public Text scoreText;
+    public Text highscoreText;
 
     [Header("Game Over")]
     public GameObject gameOverPanel;
     public Text gameOverPanelScoreText;
+    public Text gameOverPanelHighScoreText;
 
     private void Awake()
     {
         gameOverPanel.SetActive(false);
+        GetHighscore();
+    }
+    private void GetHighscore()
+    {
+        highscore = PlayerPrefs.GetInt("Highscore");
+        highscoreText.text = "Best: " + highscore;
     }
     public void IncreaseScore(int points)
     {
         score += points;
         scoreText.text = score.ToString();
+
+        if (score>highscore)
+        {
+            PlayerPrefs.SetInt("Highscore", score);
+            highscoreText.text = "Highscore: " + score.ToString();
+        }
     }
     public void OnBombHit()
     {
         Time.timeScale = 0;
 
         gameOverPanelScoreText.text = "Score: " + score.ToString();
+        GetHighscore();
+        gameOverPanelHighScoreText.text = "Highscore: " + highscore.ToString();
 
         gameOverPanel.SetActive(true);
 
@@ -35,10 +52,10 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         score = 0;
-        scoreText.text = "0";
+        scoreText.text = score.ToString();
 
         gameOverPanel.SetActive(false);
-        gameOverPanelScoreText.text = "Score: 0";
+        gameOverPanelHighScoreText.text = "Highscore: " + highscore.ToString();
 
         foreach (GameObject g in GameObject.FindGameObjectsWithTag("Interactable"))
         {
